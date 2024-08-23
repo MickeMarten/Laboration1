@@ -1,14 +1,16 @@
 package laboration;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ElectricPriceService {
-    public static void ScvReader() throws Exception {
+    public static List<String[]> ScvReader(String filePath) throws Exception {
 
-        String file = "elpriser.csv";
+        List<String[]> valuesList = new ArrayList<>();
+
+        String file = filePath;
 
         String line = "";
         try {
@@ -16,13 +18,15 @@ public class ElectricPriceService {
             while ((line = reader.readLine()) != null) {
 
                 String[] values = line.split(";");
-                System.out.println("Tid:" + values[0] + " " + "Pris:" + values[1]);
+                valuesList.add(values);
 
             }
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        return valuesList;
 
 
 
