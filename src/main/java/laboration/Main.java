@@ -1,29 +1,31 @@
 package laboration;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.Collections;
 
 public class Main {
     public static Scanner sc = new Scanner(System.in);
     public static void main(String[] args)  {
+        boolean userOnline = true;
+         String file = "elpriser.csv";
+        while (userOnline) {
 
 
-
-        System.out.print("Welcome to 'Electric prices today co'. \n Elpriser \n ========= \n 1.Se elpriser idag \n 2.Min, Max och Medel \n 3.Sortera \n 4.Bästa Laddningstid (4) \n e. Avsluta \n");
+        System.out.print("Välkommen till 'El-Priser idag co'. \n Elpriser \n ========= \n 1.Se elpriser idag \n 2.Min, Max och Medel \n 3.Sortera \n 4.Bästa Laddningstid (4) \n e. Avsluta \n");
         System.out.print("Skriv ditt val här:");
         String userInput = sc.nextLine();
 
 
-
-    switch (userInput){
+        switch (userInput){
         case "1":
-            ElectricPriceToday();
-        break;
+            electricPricesToday(file);
+            break;
 
         case "2":
-            ComparePrices();
+            comparePrices(file);
         break;
 
-        case "3": System.out.println("test 3");
+        case "3":
+            sortCheapestToMostExpensive(file);
         break;
 
         case "4": System.out.println("test 4");
@@ -31,18 +33,21 @@ public class Main {
 
         case "e":
         case"E":
-            System.out.println("test e");
+            System.out.println("Ha en trevlig dag.");
+            userOnline = false;
         break;
         default:
             System.out.println("Fel inmatning");
         break;
     }
+    }
 
     }
 
-    static public void ElectricPriceToday(){
-        String file = "elpriser.csv";
+     static void electricPricesToday(String file){
         try {
+
+
             List<String[]> electricData = ElectricPriceService.ScvReader(file);
                     for(String[] electricDataDetails : electricData){
                         float price = Float.parseFloat(electricDataDetails[1]);
@@ -60,9 +65,10 @@ public class Main {
     }
 
 
-    static public void ComparePrices(){
-        String file = "elpriser.csv";
+     static void comparePrices(String file){
         try{
+
+
             List<String[]> electricData = ElectricPriceService.ScvReader((file));
             float lowestPrice = Float.MAX_VALUE;
             float highestPrice = Float.MIN_VALUE;
@@ -92,8 +98,70 @@ public class Main {
             System.out.println("Fel vid hätmnigen av data!" + e);
 
         }
-        System.out.println("Tryck på valfri tanget för att återgå till huvudmenyn.");
-        sc.nextLine();
+
+
+    }
+
+     static void sortCheapestToMostExpensive(String file){
+        try {
+
+        List<String[]> electricData = ElectricPriceService.ScvReader((file));
+        List<TimePriceObject> electricDataSorted = new ArrayList<>();
+
+
+        for(String[] electricDataDetails : electricData){
+            float electricPrice = Float.parseFloat(electricDataDetails[1]);
+            String time = electricDataDetails[0];
+
+            electricDataSorted.add(new TimePriceObject(time, electricPrice));
+
+        }
+
+            Collections.sort(electricDataSorted, Comparator.comparing(TimePriceObject::getPrice));
+
+
+            for (TimePriceObject object : electricDataSorted) {
+                System.out.println("Tid:" + object.getTime() + "Pris:" + object.getPrice());
+            }
+
+            System.out.println("Tryck på valfri tanget för att återgå till huvudmenyn.");
+            sc.nextLine();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+
+
+    }
+    static void bestChargingTime(String file){
+        try {
+
+        int k = 4;
+        List<String[]> electricData = ElectricPriceService.ScvReader((file));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+     static class TimePriceObject {
+        String time;
+        float price;
+
+        public TimePriceObject(String time, float price){
+            this.time = time;
+            this.price = price;
+        }
+
+        public String getTime() {
+            return time;
+        }
+
+        public float getPrice() {
+            return price;
+        }
 
     }
 
