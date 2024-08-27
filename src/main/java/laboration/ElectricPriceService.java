@@ -1,4 +1,5 @@
 package laboration;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -25,18 +26,12 @@ public class ElectricPriceService {
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            System.out.println("Filen finns inte Error:1010100101. Please reboot 3 times.");
         }
         return valuesList;
 
 
-
-
-
-
-
     }
-
-
 
 
 }
