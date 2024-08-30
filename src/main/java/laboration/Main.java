@@ -1,5 +1,4 @@
 package laboration;
-
 import java.util.*;
 import java.util.Collections;
 
@@ -22,12 +21,12 @@ public class Main {
                     break;
 
                 case "2":
-                    comparePrices();
+                    getMinMaxAveragePrice();
                     break;
 
 
                 case "3":
-                    sortCheapestToMostExpensive();
+                    sortCheapestToMostExpensiveTime();
                     break;
 
                 case "4":
@@ -90,15 +89,16 @@ public class Main {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+
             System.out.println("Fel vid hämtning av data");
+            e.printStackTrace();
         }
         returnToMenu();
 
     }
 
 
-    static void comparePrices() {
+    static void getMinMaxAveragePrice() {
         try {
 
 
@@ -129,14 +129,15 @@ public class Main {
             System.out.println("Medelvärdet på dygnet är:" + priceSummary + "öre/kWh");
 
         } catch (Exception e) {
-            System.out.println("Fel vid hätmnigen av data!" + e);
 
+            System.out.println("Fel vid hämtning av data");
+            e.printStackTrace();
         }
         returnToMenu();
 
     }
 
-    static void sortCheapestToMostExpensive() {
+    static void sortCheapestToMostExpensiveTime() {
         try {
 
             List<String[]> electricData = getCSVFile();
@@ -151,16 +152,17 @@ public class Main {
 
             }
 
-            Collections.sort(electricDataSorted, Comparator.comparing(TimePriceObject::getPrice));
+            Collections.sort(electricDataSorted, Comparator.comparing(TimePriceObject::price));
 
 
             for (TimePriceObject object : electricDataSorted) {
-                System.out.println("Tid:" + object.getTime() + "Pris:" + object.getPrice() + "öre/kWh");
+                System.out.println("Tid:" + object.time + "Pris:" + object.price + "öre/kWh");
             }
 
         } catch (Exception e) {
+
+            System.out.println("Fel vid hätmnigen av data!");
             e.printStackTrace();
-            System.out.println("Fel vid hätmnigen av data!" + e);
 
         }
         returnToMenu();
@@ -184,25 +186,26 @@ public class Main {
                 float totalPrice = 0;
 
                 for (int j = 0; j < windowSize; j++) {
-                    totalPrice += electricPriceList.get(i + j).getPrice();
+                    totalPrice += electricPriceList.get(i + j).price;
 
                 }
                 float avgPrice = totalPrice / windowSize;
                 if (avgPrice < minAvgPrice) {
                     minAvgPrice = avgPrice;
-                    bestStartTime = electricPriceList.get(i).getTime();
+                    bestStartTime = electricPriceList.get(i).time;
 
 
                 }
 
             }
-            ;
+
             System.out.println("Bästa starttid för laddning är mellan" + bestStartTime + "och 4 timmar framåt: ");
             System.out.println("Medelrpriset för dessa 4 timmar är: " + minAvgPrice + " öre/kWh");
 
 
         } catch (Exception e) {
 
+            System.out.println("Fel vid hämtning av data");
             e.printStackTrace();
 
         }
@@ -210,22 +213,8 @@ public class Main {
     }
 
 
-    static class TimePriceObject {
-        String time;
-        float price;
 
-        public TimePriceObject(String time, float price) {
-            this.time = time;
-            this.price = price;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public float getPrice() {
-            return price;
-        }
+    record TimePriceObject(String time, float price) {
 
     }
 
